@@ -1,20 +1,11 @@
 package ssafy.StackFlow.Domain.product;
 
-import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.fasterxml.jackson.annotation.JsonBackReference;
 import jakarta.persistence.*;
 import lombok.Getter;
 import lombok.Setter;
-import ssafy.StackFlow.Domain.RT.RT;
-import ssafy.StackFlow.Domain.RT.RtStatus;
-import ssafy.StackFlow.Domain.Store;
 import ssafy.StackFlow.Domain.category.Category;
 import ssafy.StackFlow.Domain.category.CategoryGroup;
-
-import java.time.LocalDateTime;
-import java.util.ArrayList;
-import java.util.List;
-
-import static jakarta.persistence.FetchType.LAZY;
 
 @Entity
 @Getter
@@ -25,37 +16,41 @@ public class Product {
     @Column(name = "product_id")
     private Long id;
 
+    @Column(nullable = false)
     private String prodName;
+
+    @Column(nullable = false, unique = true)
     private String prodCode;
+
     private String prodDetail;
 
-    private int stockPrice;     // 입고 가격
-    private int sellPrice;      // 출고 가격
-    private int stockQuantity;  // 입고 수량
+    @Column(nullable = false)
+    private int stockPrice;
 
-    @ManyToOne(fetch = LAZY)
-    @JoinColumn(name = "category_id")
+    @Column(nullable = false)
+    private int sellPrice;
+
+    @Column(nullable = false)
+    private int stockQuantity;
+
+    @ManyToOne(fetch = FetchType.LAZY, optional = false)
+    @JoinColumn(name = "category_id", nullable = false)
     private Category prodCate;
 
-    @ManyToOne(fetch = LAZY)
-    @JoinColumn(name = "brand_id")
+    @ManyToOne(fetch = FetchType.LAZY, optional = false)
+    @JoinColumn(name = "brand_id", nullable = false)
     private Brand brandCode;
 
-    @ManyToOne(fetch = LAZY)
-    @JoinColumn(name = "color_id")
+    @ManyToOne(fetch = FetchType.LAZY, optional = false)
+    @JoinColumn(name = "color_id", nullable = false)
     private Color colorCode;
 
-    @ManyToOne(fetch = LAZY)
-    @JoinColumn(name = "size_id")
+    @ManyToOne(fetch = FetchType.LAZY, optional = false)
+    @JoinColumn(name = "size_id", nullable = false)
     private Size size;
 
-    @ManyToOne(fetch = LAZY)
-    @JoinColumn(name = "category_group_id")
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "group_code", referencedColumnName = "groupCode", nullable = false)
+    @JsonBackReference // 순환 참조 방지
     private CategoryGroup cateGroup;
-
-    @JsonIgnore
-    @ManyToMany(mappedBy = "products")
-    private List<Store> stores = new ArrayList<>();
-
 }
-

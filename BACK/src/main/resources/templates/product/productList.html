@@ -1,0 +1,57 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>상품 목록</title>
+</head>
+<body>
+<h1>상품 목록</h1>
+
+<!-- 성공 메시지 -->
+<div th:if="${successMessage}" class="alert alert-success">
+    <p th:text="${successMessage}"></p>
+    <p th:if="${prodCode}">등록된 상품 코드: <strong th:text="${prodCode}"></strong></p>
+</div>
+
+<!-- 에러 메시지 -->
+<div th:if="${errorMessage}" class="alert alert-danger">
+    <p th:text="${errorMessage}"></p>
+</div>
+
+<!-- 검색 폼 -->
+<form action="/product/list" method="get">
+    <label for="keyword">검색어:</label>
+    <input type="text" id="keyword" name="keyword" placeholder="상품명, 코드 등 검색">
+    <button type="submit">검색</button>
+</form>
+
+<!-- 상품 테이블 -->
+<table border="1">
+    <thead>
+    <tr>
+        <th>ID</th>
+        <th>상품명</th>
+        <th>상품코드</th>
+        <th>설명</th>
+        <th>가격</th>
+        <th>수량</th>
+        <th>상세</th>
+    </tr>
+    </thead>
+    <tbody>
+    <tr th:if="${products == null || products.isEmpty()}">
+        <td colspan="7">상품이 없습니다.</td>
+    </tr>
+    <tr th:each="product : ${products}">
+        <td th:text="${product.id}"></td>
+        <td th:text="${product.prodName}"></td>
+        <td th:text="${product.prodCode}"></td>
+        <td th:text="${product.prodDetail}"></td>
+        <td th:text="${product.sellPrice}"></td>
+        <td th:text="${product.stockQuantity}"></td>
+        <td><a th:href="@{'/product/detail/' + ${product.id}}">상세 보기</a></td>
+    </tr>
+    </tbody>
+</table>
+</body>
+</html>

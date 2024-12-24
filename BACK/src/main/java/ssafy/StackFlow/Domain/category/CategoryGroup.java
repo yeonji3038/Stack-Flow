@@ -1,9 +1,9 @@
 package ssafy.StackFlow.Domain.category;
 
+import com.fasterxml.jackson.annotation.JsonManagedReference;
 import jakarta.persistence.*;
 import lombok.Getter;
 import lombok.Setter;
-import ssafy.StackFlow.Domain.product.Product;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -14,13 +14,16 @@ import java.util.List;
 public class CategoryGroup {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    @Column(name="category_group_id")
+    @Column(name = "category_group_id")
     private Long id;
+
+    @Column(name = "groupCode", nullable = false, unique = true)
+    private String groupCode;
+
+    @Column(name = "group_name", nullable = false)
     private String groupName;
 
-    @OneToMany(mappedBy = "cateGroup")
-    private List<Category> cate_codes = new ArrayList<>();
-
-    @OneToMany(mappedBy = "cateGroup")
-    private List<Product> products_cate_group = new ArrayList<>();
+    @OneToMany(mappedBy = "cateGroup", cascade = CascadeType.ALL, orphanRemoval = true)
+    @JsonManagedReference // 역방향 참조 관리
+    private List<Category> categories = new ArrayList<>();
 }

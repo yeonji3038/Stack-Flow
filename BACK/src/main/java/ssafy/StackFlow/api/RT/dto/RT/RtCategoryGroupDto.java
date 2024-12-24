@@ -8,6 +8,6 @@ public class RtCategoryGroupDto {
     private String category_group_code;
 
     public RtCategoryGroupDto(CategoryGroup categoryGroup) {
-        category_group_code = categoryGroup.getGroupName();
+        category_group_code = categoryGroup.getGroupCode(); // 수정: getGroupCode() 호출
     }
 }

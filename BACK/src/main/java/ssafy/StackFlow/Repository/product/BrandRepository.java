@@ -7,4 +7,5 @@ import java.util.Optional;
 
 public interface BrandRepository extends JpaRepository<Brand, Long> {
     Optional<Brand> findByBrandCode(String brandCode);
+    boolean existsByBrandCode(String brandCode); // 중복 확인 메서드 추가
 }

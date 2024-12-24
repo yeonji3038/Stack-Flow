@@ -13,17 +13,15 @@ import java.util.List;
 public class Brand {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    @Column(name="brand_id")
+    @Column(name = "brand_id")
     private Long id;
 
+    @Column(name = "brand_code", nullable = false, unique = true)
     private String brandCode;
-    private String brandDetail;
 
-    @OneToMany(mappedBy = "brandCode")
+    @Column(name = "brand_name", nullable = false)
+    private String brandName;
+
+    @OneToMany(mappedBy = "brandCode", cascade = CascadeType.ALL, orphanRemoval = true)
     private List<Product> products = new ArrayList<>();
-
-    @Override
-    public String toString() {
-        return brandCode;
-    }
 }

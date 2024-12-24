@@ -1,0 +1,376 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>상품 등록</title>
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/css/bootstrap.min.css">
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/js/bootstrap.bundle.min.js"></script>
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+</head>
+<body>
+<h1 class="text-center mt-3">상품 등록</h1>
+
+<!-- 상품 등록 폼 -->
+<form th:action="@{/product/create}" method="post">
+    <input type="hidden" name="_csrf" th:value="${_csrf.token}" />
+
+    <!-- 상품명 -->
+    <div class="mb-3">
+        <label for="prodName" class="form-label">상품명</label>
+        <input type="text" id="prodName" name="prodName" class="form-control" required>
+    </div>
+
+    <!-- 브랜드 -->
+    <div class="mb-3">
+        <label for="brandCode" class="form-label">브랜드</label>
+        <select name="brandCode" id="brandCode" class="form-select" required>
+            <option value="">브랜드 선택</option>
+            <option th:each="brand : ${brandList}" th:value="${brand.brandCode}" th:text="${brand.brandName}"></option>
+        </select>
+    </div>
+
+    <!-- 카테고리 그룹 -->
+    <div class="mb-3">
+        <label for="categoryGroup" class="form-label">카테고리 그룹</label>
+        <select id="categoryGroup" class="form-select" required>
+            <option value="">그룹 선택</option>
+            <option value="top">Top</option>
+            <option value="outer">Outer</option>
+            <option value="bottom">Bottom</option>
+            <option value="acc">Accessory</option>
+        </select>
+    </div>
+
+    <!-- 카테고리 -->
+    <div class="mb-3">
+        <label for="categoryCode" class="form-label">카테고리</label>
+        <div class="d-flex">
+            <select id="categoryCode" name="categoryCode" class="form-select me-2" required>
+                <option value="">카테고리 선택</option>
+            </select>
+            <button type="button" class="btn btn-secondary admin-only" data-bs-toggle="modal" data-bs-target="#addCategoryModal">카테고리 등록</button>
+        </div>
+    </div>
+
+    <!-- 색상 -->
+    <div class="mb-3">
+        <label for="colorCode" class="form-label">색상</label>
+        <div class="d-flex">
+            <select name="colorCode" id="colorCode" class="form-select me-2" required>
+                <option value="">색상 선택</option>
+                <option th:each="color : ${colorList}" th:value="${color.colorCode}" th:text="${color.colorName}"></option>
+            </select>
+            <button type="button" class="btn btn-secondary admin-only" data-bs-toggle="modal" data-bs-target="#addColorModal">색상 등록</button>
+        </div>
+    </div>
+
+    <!-- 사이즈 -->
+    <div class="mb-3">
+        <label for="size" class="form-label">사이즈</label>
+        <select name="size" id="size" class="form-select" required>
+            <option value="">사이즈 선택</option>
+            <option value="S">S</option>
+            <option value="M">M</option>
+            <option value="L">L</option>
+        </select>
+    </div>
+
+    <!-- 입고 가격 -->
+    <div class="mb-3">
+        <label for="stockPrice" class="form-label">입고 가격</label>
+        <input type="number" id="stockPrice" name="stockPrice" class="form-control" required>
+    </div>
+
+    <!-- 출고 가격 -->
+    <div class="mb-3">
+        <label for="sellPrice" class="form-label">출고 가격</label>
+        <input type="number" id="sellPrice" name="sellPrice" class="form-control" required>
+    </div>
+
+    <!-- 입고 수량 -->
+    <div class="mb-3">
+        <label for="stockQuantity" class="form-label">입고 수량</label>
+        <input type="number" id="stockQuantity" name="stockQuantity" class="form-control" required>
+    </div>
+
+    <!-- 상품 상세 설명 -->
+    <div class="mb-3">
+        <label for="prodDetail" class="form-label">상품 상세 설명</label>
+        <textarea id="prodDetail" name="prodDetail" class="form-control" rows="5"></textarea>
+    </div>
+
+    <button type="submit" class="btn btn-success">상품 등록</button>
+</form>
+
+<!-- 카테고리 추가 모달 -->
+<div class="modal fade" id="addCategoryModal" tabindex="-1" aria-labelledby="addCategoryModalLabel" aria-hidden="true">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <form id="addCategoryForm">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="addCategoryModalLabel">카테고리 등록</h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                <div class="modal-body">
+                    <div class="mb-3">
+                        <label for="groupName" class="form-label">카테고리 그룹</label>
+                        <select id="groupName" name="groupName" class="form-select" required>
+                            <option value="">카테고리 그룹 선택</option>
+                            <option value="top">Top</option>
+                            <option value="outer">Outer</option>
+                            <option value="bottom">Bottom</option>
+                            <option value="acc">Accessory</option>
+                        </select>
+                    </div>
+                    <div class="mb-3">
+                        <label for="cateCode" class="form-label">카테고리 코드</label>
+                        <input type="text" id="cateCode" name="cateCode" class="form-control" required>
+                    </div>
+                    <div class="mb-3">
+                        <label for="cateName" class="form-label">카테고리 이름</label>
+                        <input type="text" id="cateName" name="cateName" class="form-control" required>
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">닫기</button>
+                    <button type="button" id="saveCategory" class="btn btn-primary">등록</button>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
+
+<!-- 브랜드 추가 모달 -->
+<div class="modal fade" id="addBrandModal" tabindex="-1" aria-labelledby="addBrandModalLabel" aria-hidden="true">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <form id="addBrandForm">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="addBrandModalLabel">브랜드 등록</h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                <div class="modal-body">
+                    <div class="mb-3">
+                        <label for="brandCode" class="form-label">브랜드 코드</label>
+                        <input type="text" id="newBrandCode" name="brandCode" class="form-control" required>
+                    </div>
+                    <div class="mb-3">
+                        <label for="brandName" class="form-label">브랜드 이름</label>
+                        <input type="text" id="newBrandName" name="brandName" class="form-control" required>
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">닫기</button>
+                    <button type="button" id="saveBrand" class="btn btn-primary">등록</button>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
+
+<!-- 색상 추가 모달 -->
+<div class="modal fade" id="addColorModal" tabindex="-1" aria-labelledby="addColorModalLabel" aria-hidden="true">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <form id="addColorForm">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="addColorModalLabel">색상 등록</h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                <div class="modal-body">
+                    <div class="mb-3">
+                        <label for="colorCode" class="form-label">색상 코드</label>
+                        <input type="text" id="newColorCode" name="colorCode" class="form-control" required>
+                    </div>
+                    <div class="mb-3">
+                        <label for="colorName" class="form-label">색상 이름</label>
+                        <input type="text" id="newColorName" name="colorName" class="form-control" required>
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">닫기</button>
+                    <button type="button" id="saveColor" class="btn btn-primary">등록</button>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
+
+
+<script>
+    $(document).ready(function () {
+        const csrfToken = $("input[name='_csrf']").val();
+
+        // === 모달 초기화 ===
+        function initializeModal(modalId) {
+            $(modalId)
+                .on('show.bs.modal', function () {
+                    $(this).removeAttr('aria-hidden').removeAttr('inert');
+                })
+                .on('hidden.bs.modal', function () {
+                    $(this).attr('inert', true).find('input, select').val('');
+                    $('body').focus(); // 포커스를 모달 외부로 이동
+                });
+        }
+
+        initializeModal('#addCategoryModal');
+
+        // === 브랜드 등록 ===
+        $('#saveBrand').on('click', function () {
+            const data = {
+                brandCode: $('#newBrandCode').val(),
+                brandName: $('#newBrandName').val()
+            };
+
+            if (!data.brandCode || !data.brandName) {
+                alert('브랜드 코드와 이름을 입력하세요.');
+                return;
+            }
+
+            sendPostRequest('/api/brand/add', data, () => {
+                $('#brandCode').append(`<option value="${data.brandCode}">${data.brandName}</option>`);
+                $('#addBrandModal').modal('hide');
+                alert('브랜드가 성공적으로 등록되었습니다.');
+            });
+        });
+
+        // === 색상 등록 ===
+        $('#saveColor').on('click', function () {
+            const data = {
+                colorCode: $('#newColorCode').val(),
+                colorName: $('#newColorName').val()
+            };
+
+            if (!data.colorCode || !data.colorName) {
+                alert('색상 코드와 이름을 입력하세요.');
+                return;
+            }
+
+            sendPostRequest('/api/color/add', data, () => {
+                $('#colorCode').append(`<option value="${data.colorCode}">${data.colorName}</option>`);
+                $('#addColorModal').modal('hide');
+                alert('색상이 성공적으로 등록되었습니다.');
+            });
+        });
+
+        // === 카테고리 그룹 변경 시 카테고리 로드 ===
+        $('#categoryGroup').on('change', function () {
+            const groupCode = $(this).val();
+            if (groupCode) {
+                loadCategories(groupCode);
+            } else {
+                alert('카테고리 그룹을 선택하세요.');
+            }
+        });
+
+        // === 카테고리 로드 함수 ===
+        function loadCategories(groupCode) {
+            const categorySelect = $('#categoryCode');
+            categorySelect.empty().append('<option value="">카테고리 선택</option>');
+
+            $.ajax({
+                url: `/api/category/group/${groupCode}`,
+                type: 'GET',
+                success: function (categories) {
+                    if (Array.isArray(categories) && categories.length > 0) {
+                        categories.forEach(category => {
+                            categorySelect.append(
+                                `<option value="${category.cateCode}">${category.cateName}</option>`
+                            );
+                        });
+                    } else {
+                        alert('선택한 그룹에 등록된 카테고리가 없습니다.');
+                    }
+                },
+                error: function (xhr) {
+                    console.error('카테고리 로드 실패:', xhr.responseText);
+                    alert('카테고리를 불러오는 중 오류가 발생했습니다.');
+                }
+            });
+        }
+
+        // === 카테고리 등록 ===
+        $('#saveCategory').on('click', function () {
+            const data = {
+                cateCode: $('#cateCode').val(),
+                cateName: $('#cateName').val(),
+                groupCode: $('#groupName').val()
+            };
+
+            if (!data.cateCode || !data.cateName || !data.groupCode) {
+                alert('모든 필드를 입력하세요.');
+                return;
+            }
+
+            sendPostRequest('/api/category/add', data, () => {
+                $('#addCategoryModal').modal('hide');
+                alert('카테고리가 성공적으로 추가되었습니다.');
+                if ($('#categoryGroup').val() === data.groupCode) {
+                    loadCategories(data.groupCode);
+                }
+            });
+        });
+
+        // === 공통 POST 요청 함수 ===
+        function sendPostRequest(url, data, successCallback) {
+            $.ajax({
+                url: url,
+                type: 'POST',
+                contentType: 'application/x-www-form-urlencoded; charset=UTF-8',
+                data: data,
+                headers: { 'X-CSRF-TOKEN': csrfToken },
+                success: successCallback,
+                error: function (xhr) {
+                    console.error(`${url} 요청 실패:`, xhr.responseText);
+                    alert(`요청 실패. 에러 메시지: ${xhr.responseText}`);
+                }
+            });
+        }
+
+        // === 상품 등록 폼 제출 처리 ===
+        function handleFormSubmit(event) {
+            event.preventDefault();
+            const form = event.target;
+            const formData = new FormData(form);
+
+            fetch(form.action, {
+                method: 'POST',
+                body: formData
+            })
+            .then(response => {
+                if (response.redirected) {
+                    window.location.href = response.url;
+                } else {
+                    return response.text().then(errorMessage => {
+                        alert("등록 실패: " + errorMessage);
+                    });
+                }
+            })
+            .catch(error => {
+                console.error("오류 발생:", error);
+                alert("네트워크 오류가 발생했습니다.");
+            });
+
+            return false;
+        }
+
+        // === 오류 메시지 표시 ===
+        function displayErrorMessage(message) {
+            const errorContainer = document.querySelector("#errorContainer");
+            if (!errorContainer) {
+                const newErrorContainer = document.createElement("div");
+                newErrorContainer.id = "errorContainer";
+                newErrorContainer.className = "alert alert-danger mt-3";
+                newErrorContainer.innerText = message;
+                document.querySelector("form").prepend(newErrorContainer);
+            } else {
+                errorContainer.innerText = message;
+            }
+        }
+    });
+
+</script>
+
+
+</body>
+</html>

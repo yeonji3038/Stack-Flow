@@ -1,14 +1,9 @@
 package ssafy.StackFlow.Domain.category;
 
+import com.fasterxml.jackson.annotation.JsonBackReference;
 import jakarta.persistence.*;
 import lombok.Getter;
 import lombok.Setter;
-import ssafy.StackFlow.Domain.product.Product;
-
-import java.util.ArrayList;
-import java.util.List;
-
-import static jakarta.persistence.FetchType.LAZY;
 
 @Entity
 @Getter
@@ -16,16 +11,17 @@ import static jakarta.persistence.FetchType.LAZY;
 public class Category {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    @Column(name="category_id")
+    @Column(name = "category_id")
     private Long id;
 
+    @Column(nullable = false, unique = true)
     private String cateCode;
+
+    @Column(nullable = false)
     private String cateName;
 
-    @ManyToOne(fetch = LAZY)
-    @JoinColumn(name = "group_code")
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "group_code", referencedColumnName = "groupCode", nullable = false)
+    @JsonBackReference // 순환 참조 방지
     private CategoryGroup cateGroup;
-
-    @OneToMany(mappedBy = "prodCate")
-    private List<Product> products_cate = new ArrayList<>();
 }
